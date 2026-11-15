@@ -770,9 +770,6 @@ const RECORD = {
   ],
 
 
-  todo: [
-    "Vet visit to get Freddie’s anal glands expressed."
-  ]
 };
 </script>
 
@@ -803,7 +800,6 @@ const RECORD = {
     <a href="#weight">Weight</a>
     <a href="#issues">Recurring issues</a>
     <a href="#log">Health log</a>
-    <a href="#todo">To do</a>
   </nav>
 
   <section id="upcoming">
@@ -835,11 +831,6 @@ const RECORD = {
       <div class="filters" id="filters" role="tablist" aria-label="Filter log"></div>
     </div>
     <div class="log" id="log-list"></div>
-  </section>
-
-  <section id="todo">
-    <div class="section-head"><h2>To do</h2></div>
-    <div class="card todos" id="todo-card"></div>
   </section>
 
   <footer class="note">
@@ -1029,8 +1020,6 @@ const RECORD = {
   renderFilters();
   renderLog();
 
-  document.getElementById("todo-card").innerHTML =
-    `<ul>${R.todo.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
 })();
 </script>
 </body>

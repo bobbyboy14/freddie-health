@@ -484,13 +484,6 @@ const RECORD = {
       dueDisplay: "Around 21 September 2026",
       note: "Last expressed 21 July 2026 (not full). Vet said to wait about 2 months next time.",
       kind: "book"
-    },
-    {
-      title: "Grooming",
-      due: null,
-      dueDisplay: "To book",
-      note: "Last recorded: 6 August (2025 or 2026, year unclear); also 16 April 2025 and 16 January 2025. Cost $175, 7 clips.",
-      kind: "book"
     }
   ],
 
@@ -767,18 +760,9 @@ const RECORD = {
     }
   ],
 
-  grooming: {
-    cost: "$175, 7 clips",
-    visits: [
-      { date: "16 January 2025", sortDate: "2025-01-16", note: "Thursday 16 January (recorded as 2025 in the notes)." },
-      { date: "Wednesday 16 April 2025", sortDate: "2025-04-16" },
-      { date: "6 August", sortDate: "2025-08-06", yearNote: "2025 or 2026, unclear in the notes — year not assumed." }
-    ]
-  },
 
   todo: [
-    "Vet visit to get Freddie’s anal glands expressed.",
-    "Get Freddie groomed."
+    "Vet visit to get Freddie’s anal glands expressed."
   ]
 };
 </script>
@@ -810,7 +794,6 @@ const RECORD = {
     <a href="#weight">Weight</a>
     <a href="#issues">Recurring issues</a>
     <a href="#log">Health log</a>
-    <a href="#grooming">Grooming</a>
     <a href="#todo">To do</a>
   </nav>
 
@@ -843,11 +826,6 @@ const RECORD = {
       <div class="filters" id="filters" role="tablist" aria-label="Filter log"></div>
     </div>
     <div class="log" id="log-list"></div>
-  </section>
-
-  <section id="grooming">
-    <div class="section-head"><h2>Grooming</h2></div>
-    <div class="card groom" id="grooming-card"></div>
   </section>
 
   <section id="todo">
@@ -1041,11 +1019,6 @@ const RECORD = {
   });
   renderFilters();
   renderLog();
-
-  const visits = R.grooming.visits.slice().sort((a, b) => String(b.sortDate).localeCompare(String(a.sortDate)));
-  document.getElementById("grooming-card").innerHTML =
-    `<p class="cost">Cost ${esc(R.grooming.cost)}.</p>` +
-    `<ul>${visits.map((v) => `<li><strong>${esc(v.date)}</strong>${v.note ? " — " + esc(v.note) : ""}${v.yearNote ? ` <span class="year-note">${esc(v.yearNote)}</span>` : ""}</li>`).join("")}</ul>`;
 
   document.getElementById("todo-card").innerHTML =
     `<ul>${R.todo.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;

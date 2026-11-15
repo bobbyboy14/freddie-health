@@ -427,6 +427,13 @@ const RECORD = {
       dad: "Golden Retriever “Baxter” (on Facebook), hip score 4",
       mum: "Standard Poodle “Mocha”"
     },
+    // Primary vet: add phone/phoneHref/address when known
+    primaryVet: {
+      name: "Ultimate Vet Clinic",
+      phone: "",
+      phoneHref: "",
+      address: ""
+    },
     emergencyVet: {
       name: "Casey Pet Emergency",
       phone: "8790 1625",
@@ -900,9 +907,13 @@ const RECORD = {
   ].map(([k, v]) => `<span class="pill">${esc(k)} <strong>${esc(v)}</strong></span>`).join("");
 
   const ev = p.emergencyVet;
+  const pv = p.primaryVet;
+  const vetRow = (label, v) =>
+    `<div><p class="label">${label}</p><p>${esc(v.name)}${v.address ? " · " + esc(v.address) : ""}</p></div>` +
+    (v.phone ? `<div><a href="${esc(v.phoneHref)}">${esc(v.phone)}</a></div>` : `<div></div>`);
   document.getElementById("emergency").innerHTML =
-    `<div><p class="label">Emergency vet</p><p>${esc(ev.name)} · ${esc(ev.address)}</p></div>` +
-    `<div><a href="${esc(ev.phoneHref)}">${esc(ev.phone)}</a></div>`;
+    `<div style="flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem">${vetRow("Primary vet", pv)}</div>` +
+    `<div style="flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;margin-top:.6rem">${vetRow("Emergency vet", ev)}</div>`;
 
   document.getElementById("due-list").innerHTML = R.upcoming.map((item) => {
     const st = statusFor(item);

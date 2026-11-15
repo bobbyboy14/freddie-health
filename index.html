@@ -463,6 +463,15 @@ const RECORD = {
       kind: "scheduled"
     },
     {
+      title: "Ear cleaning (Otoflush)",
+      // noStatus + statusLabel: neutral badge, no overdue alert
+      noStatus: true,
+      statusLabel: "Due now",
+      dueDisplay: "Every 2 weeks · next was around 22 October 2026",
+      note: "Last cleaned 8 October 2026. Clean with Otoflush every 2 weeks.",
+      kind: "info"
+    },
+    {
       title: "Annual C5 vaccination",
       // noStatus: show as information only, no overdue/due badge
       noStatus: true,
@@ -870,7 +879,7 @@ const RECORD = {
   }
 
   function statusFor(item) {
-    if (item.noStatus) return { key: "info", label: "Info", cls: "" };
+    if (item.noStatus) return { key: "info", label: item.statusLabel || "Info", cls: "" };
     if (!item.due) return { key: "book", label: "To book", cls: "" };
     if (item.due < today) return { key: "overdue", label: "Overdue", cls: "overdue" };
     if (item.due === today) return { key: "today", label: "Due today", cls: "soon" };

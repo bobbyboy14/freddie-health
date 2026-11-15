@@ -464,10 +464,11 @@ const RECORD = {
     },
     {
       title: "Annual C5 vaccination",
-      due: "2026-08-27",
-      dueDisplay: "Due from 27 August 2026",
-      note: "Last given 27 August 2025 (Nobivac Flex DHPPi + Oral BB). No 2026 record.",
-      kind: "scheduled"
+      // noStatus: show as information only, no overdue/due badge
+      noStatus: true,
+      dueDisplay: "Last C5: 27 August 2025",
+      note: "Nobivac Flex DHPPi + Oral BB, given with anal gland expression at the 27 August 2025 visit. C5 is typically given yearly.",
+      kind: "info"
     },
     {
       title: "Dental clean",
@@ -783,6 +784,7 @@ const RECORD = {
 </script>
 
 <div class="wrap">
+  <p class="top-note" style="background:#fff8e1;border:1px solid #f0d98a;color:#5c4a00;border-radius:10px;padding:.6rem .9rem;margin:0 0 1rem;font-weight:600">Note: Confirm Freddie's next C5 vaccination due date with Ultimate Vet Clinic. C5 is typically given yearly.</p>
   <header class="hero">
     <div class="mark" aria-hidden="true">
       <svg viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

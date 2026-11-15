@@ -431,9 +431,11 @@ const RECORD = {
     // Primary vet: add phone/phoneHref/address when known
     primaryVet: {
       name: "Ultimate Vet Clinic",
-      phone: "",
-      phoneHref: "",
-      address: ""
+      phone: "(03) 8790 2425",
+      phoneHref: "tel:+61387902425",
+      address: "242 Narre Warren Cranbourne Road, Narre Warren VIC 3805",
+      website: "https://www.ultimatevet.com.au/",
+      hours: "Mon–Fri 8am–6pm, Sat 8am–12pm, closed Sun & public holidays"
     },
     emergencyVet: {
       name: "Casey Pet Emergency",
@@ -892,7 +894,7 @@ const RECORD = {
   const ev = p.emergencyVet;
   const pv = p.primaryVet;
   const vetRow = (label, v) =>
-    `<div><p class="label">${label}</p><p>${esc(v.name)}${v.address ? " · " + esc(v.address) : ""}</p></div>` +
+    `<div><p class="label">${label}</p><p>${v.website ? `<a href="${esc(v.website)}" target="_blank" rel="noopener">${esc(v.name)}</a>` : esc(v.name)}${v.address ? " · " + esc(v.address) : ""}</p>${v.hours ? `<p style="font-weight:400;font-size:.85rem">${esc(v.hours)}</p>` : ""}</div>` +
     (v.phone ? `<div><a href="${esc(v.phoneHref)}">${esc(v.phone)}</a></div>` : `<div></div>`);
   document.getElementById("emergency").innerHTML =
     `<div style="flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem">${vetRow("Primary vet", pv)}</div>` +

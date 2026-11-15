@@ -470,10 +470,11 @@ const RECORD = {
     },
     {
       title: "Dental clean",
-      due: "2025-08-27",
-      dueDisplay: "Recommended August 2025",
-      note: "Recommended at the 27 August 2025 visit. No record that it has been done.",
-      kind: "book"
+      // noStatus: show as information only, no overdue/due badge
+      noStatus: true,
+      dueDisplay: "Last dental: 27 August 2025",
+      note: "Vet's recommendation at the 27 August 2025 visit: needs a dental clean.",
+      kind: "info"
     },
     {
       title: "Anal glands visit",
@@ -516,7 +517,7 @@ const RECORD = {
     },
     {
       title: "Dental clean",
-      detail: "Recommended on 27 August 2025. No later record that it has been done."
+      detail: "Last dental: 27 August 2025. Vet's recommendation at that visit: needs a dental clean."
     }
   ],
 
@@ -888,6 +889,7 @@ const RECORD = {
   }
 
   function statusFor(item) {
+    if (item.noStatus) return { key: "info", label: "Info", cls: "" };
     if (!item.due) return { key: "book", label: "To book", cls: "" };
     if (item.due < today) return { key: "overdue", label: "Overdue", cls: "overdue" };
     if (item.due === today) return { key: "today", label: "Due today", cls: "soon" };

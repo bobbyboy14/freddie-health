@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Freddie — Health Record</title>
+  <style>
+    :root {
+      --bg: #f3eee4;
+      --bg-tint: #eae3d6;
+      --paper: #fffdf8;
+      --ink: #2a241c;
+      --muted: #5c5348;
+      --faint: #8a8176;
+      --line: #e4d9c8;
+      --line-strong: #d3c6b2;
+      --rust: #b4532a;
+      --rust-ink: #8f3d1c;
+      --rust-soft: #f6e8de;
+      --sage: #3f5d4e;
+      --sage-ink: #2f4a3d;
+      --sage-soft: #e5eee8;
+      --gold: #8a6a2f;
+      --gold-soft: #f5edd6;
+      --alert: #8b2e1f;
+      --alert-soft: #f8e4df;
+      --soon: #7a4e12;
+      --soon-soft: #f6ebcf;
+      --ok: #2f5d45;
+      --ok-soft: #e3efe8;
+      --shadow: 0 1px 2px rgba(42, 36, 28, 0.05), 0 8px 24px rgba(42, 36, 28, 0.06);
+      --radius: 16px;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 500px at 50% -80px, #efe6d6 0%, transparent 70%),
+        var(--bg);
+      color: var(--ink);
+      font: 16px/1.55 var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--rust-ink); }
+    a:hover { color: var(--ink); }
+    img, svg { max-width: 100%; }
+    button, input, select { font: inherit; }
+
+    .wrap {
+      width: min(920px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.25rem 0 4rem;
+    }
+
+    header.hero {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.1rem 1.25rem;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .mark {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: var(--rust-soft);
+      color: var(--rust-ink);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(180, 83, 42, 0.12);
+    }
+    .mark svg { width: 42px; height: 42px; }
+    header.hero h1 {
+      font-family: var(--serif);
+      font-weight: 650;
+      font-size: clamp(2rem, 5vw, 2.7rem);
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin: 0 0 0.25rem;
+    }
+    .tagline {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.22rem 0.7rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .pill strong { color: var(--ink); font-weight: 600; }
+
+    .emergency {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem 1.25rem;
+      background: var(--alert-soft);
+      border: 1px solid #ecc7bf;
+      color: var(--alert);
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .emergency .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin: 0 0 0.15rem;
+    }
+    .emergency p { margin: 0; font-weight: 600; color: var(--ink); }
+    .emergency a { color: var(--alert); font-weight: 650; text-decoration: none; }
+    .emergency a:hover { text-decoration: underline; }
+
+    nav.jump {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 0.55rem 0;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(10px);
+    }
+    nav.jump a {
+      text-decoration: none;
+      color: var(--muted);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.28rem 0.7rem;
+      font-size: 0.82rem;
+    }
+    nav.jump a:hover { border-color: var(--line-strong); color: var(--ink); }
+
+    section { margin: 0 0 1.75rem; }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin: 0 0 0.75rem;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .hint { color: var(--faint); font-size: 0.85rem; }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .due-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+    .due {
+      padding: 0.95rem 1rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .due .when {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      margin: 0.15rem 0 0.35rem;
+    }
+    .due h3 {
+      margin: 0.35rem 0 0.2rem;
+      font-size: 1.02rem;
+    }
+    .due p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+    }
+    .st-overdue { background: var(--alert-soft); color: var(--alert); }
+    .st-today { background: var(--rust-soft); color: var(--rust-ink); }
+    .st-soon { background: var(--soon-soft); color: var(--soon); }
+    .st-upcoming { background: var(--ok-soft); color: var(--ok); }
+    .st-book { background: var(--gold-soft); color: var(--gold); }
+    .due.overdue { border-color: #ecc7bf; background: #fff8f6; }
+    .due.soon { border-color: #ead7a8; background: #fffaf0; }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .profile-grid dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 9rem 1fr;
+      gap: 0.35rem 0.85rem;
+      padding: 1rem 1.1rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .profile-grid dl:nth-last-child(-n+2) { border-bottom: 0; }
+    .profile-grid dt {
+      color: var(--faint);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding-top: 0.15rem;
+    }
+    .profile-grid dd { margin: 0; }
+    .span-2 { grid-column: 1 / -1; }
+
+    .issues {
+      display: grid;
+      gap: 0.7rem;
+    }
+    .issue {
+      padding: 0.95rem 1.05rem;
+    }
+    .issue h3 {
+      margin: 0 0 0.3rem;
+      font-size: 1.02rem;
+    }
+    .issue p { margin: 0; color: var(--muted); }
+
+    .weight-card { padding: 1rem 1.1rem 0.85rem; }
+    .chart-wrap { overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; height: auto; min-width: 520px; }
+    .weights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.45rem;
+      margin-top: 0.85rem;
+    }
+    .w-item {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 0.45rem 0.6rem;
+    }
+    .w-item .d { display: block; color: var(--faint); font-size: 0.75rem; }
+    .w-item .v { font-weight: 650; }
+    .w-item.latest { background: var(--sage-soft); }
+    .w-note { margin: 0.7rem 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .filters button {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .filters button[aria-pressed="true"] {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .log { display: grid; gap: 0.65rem; }
+    .entry {
+      padding: 0.9rem 1.05rem 1rem;
+      display: grid;
+      grid-template-columns: 8.6rem 1fr;
+      gap: 0.4rem 1rem;
+    }
+    .entry .date {
+      font-family: var(--serif);
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+    .entry .cat {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--faint);
+      font-weight: 650;
+    }
+    .entry h3 { margin: 0 0 0.3rem; font-size: 1.02rem; }
+    .entry ul { margin: 0; padding: 0 0 0 1.05rem; color: var(--muted); }
+    .entry li { margin: 0.15rem 0; }
+    .year-note {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+      color: var(--gold);
+      font-style: italic;
+    }
+    .wt-chip {
+      display: inline-block;
+      margin-top: 0.45rem;
+      background: var(--sage-soft);
+      color: var(--sage-ink);
+      border-radius: 999px;
+      padding: 0.12rem 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 650;
+    }
+
+    .groom, .todos { padding: 0.4rem 0.25rem; }
+    .groom ul, .todos ul { margin: 0; padding: 0.5rem 1.2rem 0.85rem 2rem; }
+    .groom li, .todos li { margin: 0.35rem 0; }
+    .cost {
+      padding: 0.85rem 1.1rem 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    footer.note {
+      color: var(--muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+    }
+    footer.note code {
+      font-size: 0.85em;
+      background: var(--bg-tint);
+      padding: 0.05rem 0.3rem;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 700px) {
+      .wrap { width: calc(100% - 1.25rem); }
+      header.hero { grid-template-columns: 1fr; }
+      .mark { width: 60px; height: 60px; border-radius: 18px; }
+      .profile-grid { grid-template-columns: 1fr; }
+      .profile-grid dl,
+      .profile-grid dl:nth-last-child(-n+2) {
+        grid-template-columns: 1fr;
+        gap: 0.15rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .profile-grid dl:last-child { border-bottom: 0; }
+      .entry { grid-template-columns: 1fr; }
+      nav.jump { margin-left: -0.25rem; margin-right: -0.25rem; padding-left: 0.25rem; padding-right: 0.25rem; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      nav.jump, .filters { display: none !important; }
+      .wrap { width: auto; padding: 0; }
+      .card, .due, .entry, .emergency { box-shadow: none; break-inside: avoid; }
+      .due-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<script>
+/* =============================================================================
+   FREDDIE'S HEALTH RECORD — EDIT THIS DATA
+   -----------------------------------------------------------------------------
+   This object is the source of the page. Change a field, save the file, and
+   refresh the browser. There is no build step and no external libraries.
+
+   To add a health-log entry:
+     1. Copy an existing object in `log`.
+     2. Paste it at the TOP of the `log` array (newest entries first).
+     3. Fill in:
+          date:      text shown on the page, e.g. "8 Oct 2026"
+          sortDate:  YYYY-MM-DD (used only for ordering; use 00 for unknown days)
+          title:     short heading
+          category:  "care" | "vet" | "medication" | "surgery" | "grooming"
+          details:   array of strings, one point per line
+          weightKg:  optional number if a weight was recorded
+          yearNote:  optional, e.g. "Year not recorded in the notes"
+     4. If a due item was completed, update or remove it in `upcoming`,
+        and add the visit or dose to `log` (and `weightHistory` if needed).
+
+   Dates follow the notes as written. Where a year was not recorded, it is
+   left unmarked or flagged in `yearNote` — do not invent a year.
+   ============================================================================= */
+
+const RECORD = {
+  updated: "15 Nov 2026",
+  timezone: "Australia/Melbourne",
+
+  profile: {
+    name: "Freddie",
+    sex: "Male",
+    breed: "Groodle F1 (50% Golden Retriever, 50% Standard Poodle)",
+    born: "19 July 2022",
+    desexed: "28 August 2023",
+    tag: "276212",
+    food: "Hypro Premium grain-free hypoallergenic, full adult food since 22 July 2023",
+    latestWeight: { kg: 26.7, date: "21 July 2026" },
+    breeder: {
+      phone: "0423 950 788",
+      phoneHref: "tel:+61423950788",
+      address: "1/88-90 Lincoln Road, Croydon"
+    },
+    parents: {
+      dad: "Golden Retriever “Baxter” (on Facebook), hip score 4",
+      mum: "Standard Poodle “Mocha”"
+    },
+    emergencyVet: {
+      name: "Casey Pet Emergency",
+      phone: "8790 1625",
+      phoneHref: "tel:+61387901625",
+      address: "405 Princes Hwy, Narre Warren"
+    },
+    worming: {
+      monthlyNextDue: "29 November 2026",
+      vetQuarterlyNextDue: "29 January 2027"
+    }
+  },
+
+  upcoming: [
+    {
+      title: "Monthly wormer",
+      due: "2026-11-29",
+      dueDisplay: "29 November 2026",
+      note: "Next monthly dose.",
+      kind: "scheduled"
+    },
+    {
+      title: "Vet 3-monthly wormer",
+      due: "2027-01-29",
+      dueDisplay: "29 January 2027",
+      note: "Next vet 3-monthly wormer.",
+      kind: "scheduled"
+    },
+    {
+      title: "Annual C5 vaccination",
+      due: "2026-08-27",
+      dueDisplay: "Due from 27 August 2026",
+      note: "Last given 27 August 2025 (Nobivac Flex DHPPi + Oral BB). No 2026 record.",
+      kind: "scheduled"
+    },
+    {
+      title: "Dental clean",
+      due: "2025-08-27",
+      dueDisplay: "Recommended August 2025",
+      note: "Recommended at the 27 August 2025 visit. No record that it has been done.",
+      kind: "book"
+    },
+    {
+      title: "Anal glands visit",
+      due: "2026-09-21",
+      dueDisplay: "Around 21 September 2026",
+      note: "Last expressed 21 July 2026 (not full). Vet said to wait about 2 months next time.",
+      kind: "book"
+    },
+    {
+      title: "Grooming",
+      due: null,
+      dueDisplay: "To book",
+      note: "Last recorded: 6 August (2025 or 2026, year unclear); also 16 April 2025 and 16 January 2025. Cost $175, 7 clips.",
+      kind: "book"
+    }
+  ],
+
+  weightHistory: [
+    { date: "9 September 2024", sortDate: "2024-09-09", kg: 28.5, note: "Overweight; should be able to feel ribs" },
+    { date: "18 November 2024", sortDate: "2024-11-18", kg: 27.2 },
+    { date: "17 December 2024", sortDate: "2024-12-17", kg: 26.9 },
+    { date: "3 March 2025", sortDate: "2025-03-03", kg: 26.3 },
+    { date: "20 May 2025", sortDate: "2025-05-20", kg: 26.6 },
+    { date: "7 July 2026", sortDate: "2026-07-07", kg: 28.4, note: "Vet visit" },
+    { date: "21 July 2026", sortDate: "2026-07-21", kg: 26.7 }
+  ],
+
+  recurringIssues: [
+    {
+      title: "Ear yeast / infections",
+      detail: "Both ears; right more often. Routine: Otoflush roughly every 2 weeks; plucking periodically. Vet earlier advised every 2.5–3 weeks, and a steroid if the ear is red."
+    },
+    {
+      title: "Paw chewing / licking",
+      detail: "Can lead to infection. Antibiotics and anti-itch tablets in February 2026 and July 2026; antiseptic paw gel in late July 2026."
+    },
+    {
+      title: "Anal glands",
+      detail: "Expressed regularly. At the July 2026 vet visit they were still small; wait about 2 months next time. On 21 July 2026 they were expressed and were not full."
+    },
+    {
+      title: "Dental clean",
+      detail: "Recommended on 27 August 2025. No later record that it has been done."
+    }
+  ],
+
+  log: [
+    {
+      date: "Tuesday 8 October 2026",
+      sortDate: "2026-10-08",
+      category: "care",
+      title: "Ears plucked and cleaned",
+      details: [
+        "Plucked both ears.",
+        "Cleaned left with solution only; right was fine."
+      ]
+    },
+    {
+      date: "Monday 17 August 2026",
+      sortDate: "2026-08-17",
+      category: "care",
+      title: "Ear clean",
+      details: ["Cleaned both ears with Otoflush."]
+    },
+    {
+      date: "Monday 4 August 2026",
+      sortDate: "2026-08-04",
+      category: "care",
+      title: "Ear clean and pluck",
+      details: ["Cleaned both ears with Otoflush.", "Plucked some hair."]
+    },
+    {
+      date: "Thursday 30 July 2026",
+      sortDate: "2026-07-30b",
+      category: "medication",
+      title: "3-month wormer",
+      details: ["3-month wormer given."]
+    },
+    {
+      date: "Monday–Thursday to 30 July 2026",
+      sortDate: "2026-07-30a",
+      category: "care",
+      title: "Antiseptic gel for paws",
+      details: ["Antiseptic gel on paws (eating them again)."]
+    },
+    {
+      date: "21 July 2026",
+      sortDate: "2026-07-21",
+      category: "care",
+      title: "Ears, nails, glands, weigh-in",
+      details: [
+        "Both ears good.",
+        "Use Otoflush once every 2 weeks.",
+        "Nails done.",
+        "Glands expressed (not full)."
+      ],
+      weightKg: 26.7
+    },
+    {
+      date: "7 July 2026",
+      sortDate: "2026-07-07",
+      category: "vet",
+      title: "Vet visit — ears, glands, paws",
+      details: [
+        "Both ears yeast/infected: ear drops for the left ear for 1 week, right ear for 2 weeks.",
+        "Anal glands expressed (wait 2 months next time; they were still small).",
+        "Infected paw from chewing: antibiotics.",
+        "Extra tablet for overall itchiness."
+      ],
+      weightKg: 28.4
+    },
+    {
+      date: "29 April 2026",
+      sortDate: "2026-04-29",
+      category: "medication",
+      title: "3-month wormer and ear clean",
+      details: ["3-month wormer given.", "Cleaned both ears."]
+    },
+    {
+      date: "2 April 2026",
+      sortDate: "2026-04-02",
+      category: "care",
+      title: "Ear clean",
+      details: ["Cleaned both ears."]
+    },
+    {
+      date: "1 March 2026",
+      sortDate: "2026-03-01",
+      category: "medication",
+      title: "Monthly wormer",
+      details: ["Monthly wormer done."]
+    },
+    {
+      date: "16 February 2026",
+      sortDate: "2026-02-16",
+      category: "care",
+      title: "Ears plucked",
+      details: ["Plucked ears."]
+    },
+    {
+      date: "14 February 2026",
+      sortDate: "2026-02-14",
+      category: "care",
+      title: "Ear clean",
+      details: ["Cleaned ears."]
+    },
+    {
+      date: "5 February 2026",
+      sortDate: "2026-02-05",
+      category: "care",
+      title: "Ear clean",
+      details: ["Cleaned ears."]
+    },
+    {
+      date: "3 February 2026",
+      sortDate: "2026-02-03",
+      category: "medication",
+      title: "Paw treatment",
+      details: ["Antibiotics for paws.", "Anti-itch tablets for paws."]
+    },
+    {
+      date: "28 January 2026",
+      sortDate: "2026-01-28",
+      category: "medication",
+      title: "3-month wormer",
+      details: ["3-month wormer given."]
+    },
+    {
+      date: "27 January 2026",
+      sortDate: "2026-01-27",
+      category: "medication",
+      title: "Monthly wormer",
+      details: ["Monthly wormer given."]
+    },
+    {
+      date: "23 January 2026",
+      sortDate: "2026-01-23",
+      category: "care",
+      title: "Glands and nails",
+      details: ["Anal glands expressed.", "Nails trimmed."]
+    },
+    {
+      date: "18 January 2026",
+      sortDate: "2026-01-18",
+      category: "care",
+      title: "Ear clean",
+      details: ["Cleaned ears."]
+    },
+    {
+      date: "4 January 2026",
+      sortDate: "2026-01-04",
+      category: "care",
+      title: "Ear clean",
+      details: ["Cleaned ears."]
+    },
+    {
+      date: "13 November 2025",
+      sortDate: "2025-11-13",
+      category: "surgery",
+      title: "Gastrotomy to remove an AirPod",
+      details: [
+        "Casey Pet Emergency — 8790 1625, 405 Princes Hwy, Narre Warren.",
+        "Surgical removal (gastrotomy) to remove an AirPod.",
+        "Recovered very well from surgery and anaesthetic.",
+        "Home 14 November 2025."
+      ]
+    },
+    {
+      date: "27 August 2025",
+      sortDate: "2025-08-27",
+      category: "vet",
+      title: "Vet visit — glands, C5 vaccine, dental note",
+      details: [
+        "Anal glands expressed.",
+        "C5 annual vaccination — Nobivac Flex DHPPi + Oral BB.",
+        "Needs a dental clean."
+      ]
+    },
+    {
+      date: "20 May 2025",
+      sortDate: "2025-05-20",
+      category: "vet",
+      title: "Vet visit — glands and possible early ear infection",
+      details: [
+        "Anal glands expressed.",
+        "Might be a very early stage of ear infection (maybe not).",
+        "Clean ears 3 times a week for 2 weeks."
+      ],
+      weightKg: 26.6
+    },
+    {
+      date: "4 March 2025",
+      sortDate: "2025-03-04",
+      category: "vet",
+      title: "Anal glands expressed",
+      details: ["Anal glands expressed."]
+    },
+    {
+      date: "3 March 2025",
+      sortDate: "2025-03-03",
+      category: "vet",
+      title: "Vet visit — weight, ear routine, diet trial",
+      details: [
+        "If ears start to get red, clean once every 2nd week; so far, keep it to once every 3 weeks.",
+        "Try out an allergy-free diet for 2 months and check for improvements in his ears."
+      ],
+      weightKg: 26.3
+    },
+    {
+      date: "17 December 2024",
+      sortDate: "2024-12-17",
+      category: "vet",
+      title: "Vet visit — ears and weight",
+      details: [
+        "Use ear solution every 2.5–3 weeks; if the ear is red, use that steroid.",
+        "Inside his ear canals are good and not damaged, with no irritation or infection.",
+        "Both ears are good, but the right one has a little bit of discharge (excess wax)."
+      ],
+      weightKg: 26.9
+    },
+    {
+      date: "18 November 2024",
+      sortDate: "2024-11-18",
+      category: "vet",
+      title: "Vet visit — right ear infection",
+      details: [
+        "Weight 27.2 kg (lost 1.3 kg).",
+        "Had an ear infection in his right ear (been 5 months since the last ear infection).",
+        "Teeth were fine; double-check in future if they seem to be hurting him.",
+        "Anal glands released.",
+        "Nails trimmed."
+      ],
+      weightKg: 27.2
+    },
+    {
+      date: "9 September 2024",
+      sortDate: "2024-09-09",
+      category: "vet",
+      title: "Vet visit — yearly vaccine, weight advice",
+      details: [
+        "Anal glands released.",
+        "Ears okay.",
+        "Teeth okay (eat carrots for teeth).",
+        "Had his yearly vaccine.",
+        "Is overweight; need to be able to feel his ribs on his side."
+      ],
+      weightKg: 28.5
+    }
+  ],
+
+  grooming: {
+    cost: "$175, 7 clips",
+    visits: [
+      { date: "16 January 2025", sortDate: "2025-01-16", note: "Thursday 16 January (recorded as 2025 in the notes)." },
+      { date: "Wednesday 16 April 2025", sortDate: "2025-04-16" },
+      { date: "6 August", sortDate: "2025-08-06", yearNote: "2025 or 2026, unclear in the notes — year not assumed." }
+    ]
+  },
+
+  todo: [
+    "Vet visit to get Freddie’s anal glands expressed.",
+    "Get Freddie groomed."
+  ]
+};
+</script>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="14" cy="14" rx="6.2" ry="7.4"/>
+        <ellipse cx="34" cy="14" rx="6.2" ry="7.4"/>
+        <ellipse cx="8.5" cy="28" rx="5.4" ry="6.4"/>
+        <ellipse cx="39.5" cy="28" rx="5.4" ry="6.4"/>
+        <ellipse cx="24" cy="31.5" rx="10.5" ry="9.2"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Freddie</h1>
+      <p class="tagline">Health record · Groodle F1</p>
+      <div class="meta-pills" id="hero-pills"></div>
+    </div>
+  </header>
+
+  <aside class="emergency" id="emergency"></aside>
+
+  <nav class="jump" aria-label="Sections">
+    <a href="#upcoming">Upcoming</a>
+    <a href="#profile">Profile</a>
+    <a href="#weight">Weight</a>
+    <a href="#issues">Recurring issues</a>
+    <a href="#log">Health log</a>
+    <a href="#grooming">Grooming</a>
+    <a href="#todo">To do</a>
+  </nav>
+
+  <section id="upcoming">
+    <div class="section-head">
+      <h2>Upcoming / due</h2>
+      <span class="hint">Dates in Australia/Melbourne</span>
+    </div>
+    <div class="due-grid" id="due-list"></div>
+  </section>
+
+  <section id="profile">
+    <div class="section-head"><h2>Profile</h2></div>
+    <div class="card profile-grid" id="profile-card"></div>
+  </section>
+
+  <section id="weight">
+    <div class="section-head"><h2>Weight history</h2></div>
+    <div class="card weight-card" id="weight-card"></div>
+  </section>
+
+  <section id="issues">
+    <div class="section-head"><h2>Recurring issues</h2></div>
+    <div class="issues" id="issues-list"></div>
+  </section>
+
+  <section id="log">
+    <div class="section-head">
+      <h2>Health log</h2>
+      <div class="filters" id="filters" role="tablist" aria-label="Filter log"></div>
+    </div>
+    <div class="log" id="log-list"></div>
+  </section>
+
+  <section id="grooming">
+    <div class="section-head"><h2>Grooming</h2></div>
+    <div class="card groom" id="grooming-card"></div>
+  </section>
+
+  <section id="todo">
+    <div class="section-head"><h2>To do</h2></div>
+    <div class="card todos" id="todo-card"></div>
+  </section>
+
+  <footer class="note">
+    <p>Notes as given 15 November 2026. To add an entry, edit the <code>RECORD</code> data object at the top of this file — a comment there explains the fields. Newest log entries go first. Where a year was unclear in the notes, it is marked rather than guessed.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const R = RECORD;
+  const cats = {
+    care: "Home care",
+    vet: "Vet",
+    medication: "Medication",
+    surgery: "Surgery",
+    grooming: "Grooming"
+  };
+
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: R.timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(new Date());
+
+  function el(html) {
+    const t = document.createElement("template");
+    t.innerHTML = html.trim();
+    return t.content;
+  }
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function statusFor(item) {
+    if (!item.due) return { key: "book", label: "To book", cls: "" };
+    if (item.due < today) return { key: "overdue", label: "Overdue", cls: "overdue" };
+    if (item.due === today) return { key: "today", label: "Due today", cls: "soon" };
+    const due = new Date(item.due + "T00:00:00+11:00");
+    const now = new Date(today + "T00:00:00+11:00");
+    const days = Math.round((due - now) / 86400000);
+    if (days <= 14) return { key: "soon", label: "Due soon", cls: "soon" };
+    return { key: "upcoming", label: "Upcoming", cls: "" };
+  }
+
+  const p = R.profile;
+  document.getElementById("hero-pills").innerHTML = [
+    ["Tag", p.tag],
+    ["Born", p.born],
+    ["Desexed", p.desexed],
+    ["Weight", p.latestWeight.kg + " kg · " + p.latestWeight.date]
+  ].map(([k, v]) => `<span class="pill">${esc(k)} <strong>${esc(v)}</strong></span>`).join("");
+
+  const ev = p.emergencyVet;
+  document.getElementById("emergency").innerHTML =
+    `<div><p class="label">Emergency vet</p><p>${esc(ev.name)} · ${esc(ev.address)}</p></div>` +
+    `<div><a href="${esc(ev.phoneHref)}">${esc(ev.phone)}</a></div>`;
+
+  document.getElementById("due-list").innerHTML = R.upcoming.map((item) => {
+    const st = statusFor(item);
+    return `<article class="due ${st.cls}">
+      <span class="badge st-${st.key}">${esc(st.label)}</span>
+      <h3>${esc(item.title)}</h3>
+      <p class="when">${esc(item.dueDisplay)}</p>
+      <p>${esc(item.note)}</p>
+    </article>`;
+  }).join("");
+
+  const rows = [
+    ["Breed", p.breed, true],
+    ["Sex", p.sex],
+    ["Tag no.", p.tag],
+    ["Born", p.born],
+    ["Desexed", p.desexed],
+    ["Food", p.food, true],
+    ["Latest weight", p.latestWeight.kg + " kg on " + p.latestWeight.date, true],
+    ["Dad", p.parents.dad, true],
+    ["Mum", p.parents.mum],
+    ["Breeder", `<a href="${esc(p.breeder.phoneHref)}">${esc(p.breeder.phone)}</a><br>${esc(p.breeder.address)}`, false, true],
+    ["Monthly wormer", "Next due " + p.worming.monthlyNextDue],
+    ["3-monthly wormer", "Next due " + p.worming.vetQuarterlyNextDue],
+    ["Emergency vet", `${esc(ev.name)} · <a href="${esc(ev.phoneHref)}">${esc(ev.phone)}</a><br>${esc(ev.address)}`, true, true]
+  ];
+  document.getElementById("profile-card").innerHTML = rows.map(([k, v, span, raw]) => {
+    return `<dl class="${span ? "span-2" : ""}"><dt>${esc(k)}</dt><dd>${raw ? v : esc(v)}</dd></dl>`;
+  }).join("");
+
+  const weights = R.weightHistory.slice();
+  const min = Math.min(...weights.map((w) => w.kg)) - 0.6;
+  const max = Math.max(...weights.map((w) => w.kg)) + 0.4;
+  const W = 820, H = 230, L = 48, Rgt = 52, T = 22, B = 44;
+  const innerW = W - L - Rgt, innerH = H - T - B;
+  function xAt(i) { return L + (weights.length === 1 ? innerW / 2 : (i / (weights.length - 1)) * innerW); }
+  function yAt(kg) { return T + (1 - (kg - min) / (max - min)) * innerH; }
+  const pts = weights.map((w, i) => `${xAt(i).toFixed(1)},${yAt(w.kg).toFixed(1)}`).join(" ");
+  const ticks = [];
+  const step = 0.5;
+  const startTick = Math.ceil(min * 2) / 2;
+  for (let v = startTick; v <= max; v += step) {
+    const y = yAt(v);
+    ticks.push(`<line x1="${L}" y1="${y}" x2="${W - Rgt}" y2="${y}" stroke="#e4d9c8" />` +
+      `<text x="${L - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a8176">${v.toFixed(1)}</text>`);
+  }
+  function shortDate(w) {
+    const parts = String(w.sortDate).split("-");
+    if (parts.length < 3) return w.date;
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const mon = months[Number(parts[1]) - 1] || parts[1];
+    return `${Number(parts[2])} ${mon} '${parts[0].slice(2)}`;
+  }
+  const dots = weights.map((w, i) => {
+    const last = i === weights.length - 1;
+    const anchor = i === 0 ? "start" : i === weights.length - 1 ? "end" : "middle";
+    return `<circle cx="${xAt(i)}" cy="${yAt(w.kg)}" r="${last ? 5.5 : 4}" fill="${last ? "#3f5d4e" : "#b4532a"}" />` +
+      `<text x="${xAt(i)}" y="${H - 22}" text-anchor="${anchor}" font-size="11" fill="#5c5348">${esc(shortDate(w))}</text>` +
+      `<text x="${xAt(i)}" y="${yAt(w.kg) - 12}" text-anchor="middle" font-size="11" font-weight="700" fill="#2a241c">${w.kg}</text>`;
+  }).join("");
+
+  const latest = weights[weights.length - 1];
+  document.getElementById("weight-card").innerHTML = `
+    <div class="chart-wrap">
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight in kilograms from September 2024 to July 2026">
+        ${ticks.join("")}
+        <polyline fill="none" stroke="#b4532a" stroke-width="2.5" points="${pts}" />
+        ${dots}
+      </svg>
+    </div>
+    <div class="weights">
+      ${weights.map((w) => `<div class="w-item${w === latest ? " latest" : ""}"><span class="d">${esc(w.date)}</span><span class="v">${w.kg} kg</span>${w.note ? `<span class="d">${esc(w.note)}</span>` : ""}</div>`).join("")}
+    </div>
+    <p class="w-note">Latest: <strong>${latest.kg} kg</strong> on ${esc(latest.date)}. On 9 September 2024 he was 28.5 kg and noted as overweight (should be able to feel his ribs).</p>
+  `;
+
+  document.getElementById("issues-list").innerHTML = R.recurringIssues.map((issue) =>
+    `<article class="card issue"><h3>${esc(issue.title)}</h3><p>${esc(issue.detail)}</p></article>`
+  ).join("");
+
+  const filterBox = document.getElementById("filters");
+  const logList = document.getElementById("log-list");
+  const filterKeys = ["all", "vet", "care", "medication", "surgery"];
+  let active = "all";
+
+  function renderFilters() {
+    filterBox.innerHTML = filterKeys.map((k) => {
+      const label = k === "all" ? "All" : cats[k];
+      return `<button type="button" data-filter="${k}" aria-pressed="${active === k}">${label}</button>`;
+    }).join("");
+  }
+
+  function renderLog() {
+    const items = R.log
+      .slice()
+      .sort((a, b) => String(b.sortDate).localeCompare(String(a.sortDate)))
+      .filter((e) => active === "all" || e.category === active);
+    logList.innerHTML = items.map((e) => `
+      <article class="card entry">
+        <div>
+          <div class="date">${esc(e.date)}</div>
+          <span class="cat">${esc(cats[e.category] || e.category)}</span>
+        </div>
+        <div>
+          <h3>${esc(e.title)}</h3>
+          <ul>${e.details.map((d) => `<li>${esc(d)}</li>`).join("")}</ul>
+          ${e.weightKg != null ? `<span class="wt-chip">${e.weightKg} kg</span>` : ""}
+          ${e.yearNote ? `<span class="year-note">${esc(e.yearNote)}</span>` : ""}
+        </div>
+      </article>
+    `).join("") || `<p class="hint">No entries in this category.</p>`;
+  }
+
+  filterBox.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button[data-filter]");
+    if (!btn) return;
+    active = btn.getAttribute("data-filter");
+    renderFilters();
+    renderLog();
+  });
+  renderFilters();
+  renderLog();
+
+  const visits = R.grooming.visits.slice().sort((a, b) => String(b.sortDate).localeCompare(String(a.sortDate)));
+  document.getElementById("grooming-card").innerHTML =
+    `<p class="cost">Cost ${esc(R.grooming.cost)}.</p>` +
+    `<ul>${visits.map((v) => `<li><strong>${esc(v.date)}</strong>${v.note ? " — " + esc(v.note) : ""}${v.yearNote ? ` <span class="year-note">${esc(v.yearNote)}</span>` : ""}</li>`).join("")}</ul>`;
+
+  document.getElementById("todo-card").innerHTML =
+    `<ul>${R.todo.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
+})();
+</script>
+</body>
+</html>

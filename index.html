@@ -354,6 +354,37 @@
       border-radius: 4px;
     }
 
+    .audio-list { display: grid; gap: 0.7rem; }
+    .audio-card {
+      padding: 0.95rem 1.05rem 1rem;
+      display: grid;
+      grid-template-columns: 8.6rem 1fr;
+      gap: 0.4rem 1rem;
+    }
+    .audio-card .date {
+      font-family: var(--serif);
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+    .audio-card h3 {
+      margin: 0 0 0.25rem;
+      font-size: 0.95rem;
+      font-weight: 650;
+      word-break: break-word;
+    }
+    .audio-card .topic {
+      margin: 0 0 0.7rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .audio-card audio {
+      display: block;
+      width: 100%;
+      height: 2.4rem;
+      margin: 0 0 0.45rem;
+    }
+    .audio-card .dl { font-size: 0.85rem; margin: 0; }
+
     @media (max-width: 700px) {
       .wrap { width: calc(100% - 1.25rem); }
       header.hero { grid-template-columns: 1fr; }
@@ -366,7 +397,7 @@
         border-bottom: 1px solid var(--line);
       }
       .profile-grid dl:last-child { border-bottom: 0; }
-      .entry { grid-template-columns: 1fr; }
+      .entry, .audio-card { grid-template-columns: 1fr; }
       nav.jump { margin-left: -0.25rem; margin-right: -0.25rem; padding-left: 0.25rem; padding-right: 0.25rem; }
     }
 
@@ -374,7 +405,7 @@
       body { background: #fff; }
       nav.jump, .filters { display: none !important; }
       .wrap { width: auto; padding: 0; }
-      .card, .due, .entry, .emergency { box-shadow: none; break-inside: avoid; }
+      .card, .due, .entry, .audio-card, .emergency { box-shadow: none; break-inside: avoid; }
       .due-grid { grid-template-columns: 1fr 1fr; }
     }
     .st-info { background: #eef1f4; color: #4a5563; }
@@ -401,6 +432,9 @@
           yearNote:  optional, e.g. "Year not recorded in the notes"
      4. If a due item was completed, update or remove it in `upcoming`,
         and add the visit or dose to `log` (and `weightHistory` if needed).
+
+   Vet-visit recordings live in `audioFiles` (and as a `log` entry with a
+   Recording: path). Do not add personal, non-Freddie recordings to this page.
 
    Dates follow the notes as written. Where a year was not recorded, it is
    left unmarked or flagged in `yearNote` — do not invent a year.
@@ -527,6 +561,46 @@ const RECORD = {
     }
   ],
 
+
+  audioFiles: [
+    {
+      date: "21 July 2026",
+      sortDate: "2026-07-21",
+      file: "2026-07-21_ears-good-otoflush-nails.mp3",
+      topic: "Follow-up: ears good, fortnightly Otoflush, and a difficult nail trim."
+    },
+    {
+      date: "7 July 2026",
+      sortDate: "2026-07-07",
+      file: "2026-07-07_ear-infection-yeast-paw.mp3",
+      topic: "Yeast in both ears, morning-and-night drops, glands, and an infected paw."
+    },
+    {
+      date: "4 March 2025",
+      sortDate: "2025-03-04",
+      file: "2025-03-04_diet-trial-ears-nails.mp3",
+      topic: "Ear-flush routine, a hydrolysed diet trial, and a conservative nail trim."
+    },
+    {
+      date: "17 December 2024",
+      sortDate: "2024-12-17c",
+      file: "2024-12-17_ear-otoflush-glands.mp3",
+      topic: "Otoflush, ear moisture and hair, steroid if red, and anal glands."
+    },
+    {
+      date: "17 December 2024",
+      sortDate: "2024-12-17b",
+      file: "2024-12-17_preconsult-ear-talk.mp3",
+      topic: "Talk before the consult about waxy ears and anal glands."
+    },
+    {
+      date: "18 November 2024",
+      sortDate: "2024-11-18",
+      file: "2024-11-18_right-ear-yeast-long-acting-med.mp3",
+      topic: "Yeasty right ear, long-acting ear medication, and keeping ears clean and dry."
+    }
+  ],
+
   log: [
     {
       date: "Tuesday 8 October 2026",
@@ -568,6 +642,19 @@ const RECORD = {
     },
     {
       date: "21 July 2026",
+      sortDate: "2026-07-21b",
+      category: "vet",
+      title: "Vet recording — ears good, Otoflush, nails",
+      details: [
+        "Both ears were good. Use Otoflush every fortnight: squeeze it into the ear, stop when the canal fills, massage it in, then wipe with cotton around a finger.",
+        "Ask the groomer to cut the fur just at the base of the ear, because it traps moisture inside.",
+        "Bob said he had just stopped the allergy medication and is seeing how it goes, with some left to restart if it flares.",
+        "Nails were trimmed; he was very frightened by the clipper noise, and the vet suggested coming back another time just for nails if needed.",
+        "Recording: audio/2026-07-21_ears-good-otoflush-nails.mp3"
+      ]
+    },
+    {
+      date: "21 July 2026",
       sortDate: "2026-07-21",
       category: "care",
       title: "Ears, nails, glands, weigh-in",
@@ -578,6 +665,19 @@ const RECORD = {
         "Glands expressed (not full)."
       ],
       weightKg: 26.7
+    },
+    {
+      date: "7 July 2026",
+      sortDate: "2026-07-07b",
+      category: "vet",
+      title: "Vet recording — yeast in both ears",
+      details: [
+        "Swabs of both ears showed yeast, with no bacteria seen. A different ear drop, morning and night — left ear for 1 week, right ear for 2 weeks — then a recheck in 2 weeks (booked for the 21st).",
+        "A lot of fur at the base of the ear; pluck a little at the opening of the canal, where moisture builds up.",
+        "Anal glands expressed; they were very small. He cried when they were squeezed, and a month was probably too soon.",
+        "He had been wearing a cone and was still itchy. The wound was infected and needed antibiotics.",
+        "Recording: audio/2026-07-07_ear-infection-yeast-paw.mp3"
+      ]
     },
     {
       date: "7 July 2026",
@@ -713,6 +813,19 @@ const RECORD = {
     },
     {
       date: "4 March 2025",
+      sortDate: "2025-03-04b",
+      category: "vet",
+      title: "Vet recording — ear routine, diet trial, nails",
+      details: [
+        "Nails: only a tiny amount taken off. They are black, so the quick is hard to see; if they are not touching the floor, do not trim them back too far.",
+        "Ears scoped and looking good. Every 3 weeks with the ear flush is fine while they stay like this; if they look redder or have more discharge, clean more often for a couple of weeks. Cleaning too often can strip the canal.",
+        "Recurrent infections can scar and narrow the canal; surgery to remove the canals is a last-resort specialist procedure and is not needed now.",
+        "Try a 6–8 week hydrolysed diet trial alone, with no treats. The vet named hypoallergenic and z/d as complete long-term options, Royal Canin as the most palatable, and SPD crocodile and tapioca as another option. His current chicken-and-duck food is not hydrolysed, so it is not a true elimination diet. Oral allergy tablets were not expected to help ear infections much; treatment needs to be topical.",
+        "Recording: audio/2025-03-04_diet-trial-ears-nails.mp3"
+      ]
+    },
+    {
+      date: "4 March 2025",
       sortDate: "2025-03-04",
       category: "vet",
       title: "Anal glands expressed",
@@ -731,6 +844,31 @@ const RECORD = {
     },
     {
       date: "17 December 2024",
+      sortDate: "2024-12-17c",
+      category: "vet",
+      title: "Vet recording — Otoflush, moisture, glands",
+      details: [
+        "Ears scoped: little irritation, hairy inside; both eardrums clear and healthy. The right ear had a little more discharge, but cytology was quiet. Both ears cleaned.",
+        "Hair around the ears traps moisture and lets yeast overgrow. Ask the groomer to trim that hair short for airflow; the vet did not think plucking was needed because the hair was sparse.",
+        "Start Otoflush as a regular clean about every 2½ weeks — not too often, because it is hydrating and can retain moisture. If the ears are irritated, clean first, wait, then put a very thin layer of the steroid on the outside only, not deep in the canal.",
+        "Anal glands expressed; they were not quite full, and the consistency was not thick, so the vet was not too concerned.",
+        "Recording: audio/2024-12-17_ear-otoflush-glands.mp3"
+      ]
+    },
+    {
+      date: "17 December 2024",
+      sortDate: "2024-12-17b",
+      category: "vet",
+      title: "Pre-consult talk — ears and glands",
+      details: [
+        "Talk of needing a monthly anal-gland (“bum”) release.",
+        "He does not get water in his ears; grass, or rubbing his head in the grass, was suggested as a possible irritant.",
+        "He had been told not to clean the ears more than twice a week — that is too much — and that cleaning too often can irritate them and lead to other infections. They do get very waxy.",
+        "Recording: audio/2024-12-17_preconsult-ear-talk.mp3"
+      ]
+    },
+    {
+      date: "17 December 2024",
       sortDate: "2024-12-17",
       category: "vet",
       title: "Vet visit — ears and weight",
@@ -740,6 +878,19 @@ const RECORD = {
         "Both ears are good, but the right one has a little bit of discharge (excess wax)."
       ],
       weightKg: 26.9
+    },
+    {
+      date: "18 November 2024",
+      sortDate: "2024-11-18b",
+      category: "vet",
+      title: "Vet recording — yeasty right ear",
+      details: [
+        "Yeasty right ear; the left ear was fine. The previous infection had been the left ear. A long-acting ear medication was put in, lasting a month — do not clean or touch the right ear for that month (it would remove the medication); the left ear can still be cleaned.",
+        "The main thing is to keep the ears clean and dry. A one-sided infection makes a food allergy less likely, because allergic problems tend to affect both ears. Probiotics will not do any harm but may or may not help.",
+        "Do not over-clean: once or twice a week at most, or the skin in the canal can be damaged. Tease a little hair out about once a week (do not strip it bare). Ask the groomer to clip around the top of the canal down to skin level for airflow.",
+        "If the ears look a bit flaky, that is a sign to bring him in. He had lost a kilogram. Bottom canines were touching the gum but were not painful, and treatment was not needed.",
+        "Recording: audio/2024-11-18_right-ear-yeast-long-acting-med.mp3"
+      ]
     },
     {
       date: "18 November 2024",
@@ -802,6 +953,7 @@ const RECORD = {
     <a href="#weight">Weight</a>
     <a href="#issues">Recurring issues</a>
     <a href="#log">Health log</a>
+    <a href="#audio">Audio files</a>
   </nav>
 
   <section id="upcoming">
@@ -833,6 +985,14 @@ const RECORD = {
       <div class="filters" id="filters" role="tablist" aria-label="Filter log"></div>
     </div>
     <div class="log" id="log-list"></div>
+  </section>
+
+  <section id="audio">
+    <div class="section-head">
+      <h2>Audio files</h2>
+      <span class="hint">Vet-visit recordings, newest first</span>
+    </div>
+    <div class="audio-list" id="audio-list"></div>
   </section>
 
   <footer class="note">
@@ -1021,6 +1181,25 @@ const RECORD = {
   });
   renderFilters();
   renderLog();
+
+  const audioList = document.getElementById("audio-list");
+  if (audioList && Array.isArray(R.audioFiles)) {
+    const clips = R.audioFiles.slice().sort((a, b) => String(b.sortDate).localeCompare(String(a.sortDate)));
+    audioList.innerHTML = clips.map((a) => {
+      const src = "audio/" + a.file;
+      return `<article class="card audio-card">
+        <div class="date">${esc(a.date)}</div>
+        <div>
+          <h3>${esc(a.file)}</h3>
+          <p class="topic">${esc(a.topic)}</p>
+          <audio controls preload="none" src="${esc(src)}">
+            Your browser does not support the audio player. <a href="${esc(src)}">Open the file</a>
+          </audio>
+          <p class="dl"><a href="${esc(src)}" download>Download</a></p>
+        </div>
+      </article>`;
+    }).join("");
+  }
 
 })();
 </script>
